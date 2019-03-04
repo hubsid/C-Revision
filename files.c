@@ -43,14 +43,28 @@ struct wordlist* fget_str_ps(char* file_name, char* delim) {
 	}
 	
 	char buf_str[BLOCK_N];
+	char *overflow = NULL;
 	char ** cp = malloc(sizeof(char*));
 	int n = 0;
 	int str_len;
 	
 	while(fgets(buf_str, BLOCK_N, file)) {
 		puts("block");
-		char *p, *prev_p;
-		for(p = buf_str, prev_p = buf_str; *p != '\0'; p++) {
+		char* p = buf_str, *prev_p = buf_str;
+		if(overflow) {
+			for(; *p != '\0'; p++) {
+				for(char *p1 = delim; *p1 != '\0'; p1++) {
+					if(*p1 == *p) {
+						int len = p - prev_p;
+						if(len > 0) {
+							char* temp_str = malloc(len + 1);
+						}
+						
+					}
+				}
+			}
+		}
+		for(; *p != '\0'; p++) {
 			for(char *p1 = delim; *p1 != '\0'; p1++) {
 				if(*p1 == *p) {
 					puts("match");
@@ -75,7 +89,11 @@ struct wordlist* fget_str_ps(char* file_name, char* delim) {
 				}
 			}	
 		}
-//		if(prev_p != p-1)
+		if(prev_p != p) {
+			int len = p - prev_p;
+			overflow = malloc(len);
+			strncpy(overflow, prev_p, len);
+		}
 	}
 	
 	struct wordlist *list = malloc(sizeof(struct wordlist));
