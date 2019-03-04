@@ -71,6 +71,7 @@ struct wordlist* fget_str_ps(char* file_name, char* delim) {
 							
 							char* tmp = overflow;
 							overflow = NULL;
+							of_len = 0;
 							char** cp_tmp = realloc(cp, ++n * sizeof(char*));
 							if(!cp_tmp) {
 								puts("cp's 'realloc failed...");
@@ -90,18 +91,18 @@ struct wordlist* fget_str_ps(char* file_name, char* delim) {
 		for(; *p != '\0'; p++) {
 			for(char *p1 = delim; *p1 != '\0'; p1++) {
 				if(*p1 == *p) {
-					puts("match");
+//					puts("match");
 					int len = p - prev_p;
 					if(len > 0) {
 						char* temp_str = malloc(len + 1);
-						printf("*prev_p=%c,*p=%c,temp_str before copy=%s\n", *p, *prev_p, temp_str);
+//						printf("*prev_p=%c,*p=%c,temp_str before copy=%s\n", *p, *prev_p, temp_str);
 						strncpy(temp_str, prev_p, len);
 						temp_str[len] = '\0';
-						printf("len=%d\ntemp_str=%s\n", len, temp_str);
+//						printf("len=%d\ntemp_str=%s\n", len, temp_str);
 						char** cp_tmp = (char**)realloc(cp, ++n * sizeof(char*));
 						
 						if(!cp_tmp) {
-							printf("realloc failed...");
+//							printf("realloc failed...");
 							exit(0);
 						}
 						cp = cp_tmp;
@@ -113,10 +114,21 @@ struct wordlist* fget_str_ps(char* file_name, char* delim) {
 			}	
 		}
 		if(prev_p != p) {
-			of_len = p - prev_p;
-			overflow = malloc(of_len);
-			strncpy(overflow, prev_p, of_len);
+			int len = p - prev_p;
+			if(overflow)
+				overflow = realloc(overflow, of_len + len);
+			else
+				overflow = malloc(len);
+			strncpy(overflow + of_len, prev_p, len);			
 		}
+	}
+	printf("offset length=%dn\n", of_len);
+	if(overflow) {
+		overflow = realloc(overflow, of_len + 1);
+		overflow[of_len] = '\0';
+		cp = realloc(cp, ++n *sizeof(char*));
+		
+		cp[n-1] = overflow;
 	}
 	
 	struct wordlist *list = malloc(sizeof(struct wordlist));
@@ -127,7 +139,7 @@ struct wordlist* fget_str_ps(char* file_name, char* delim) {
 
 int main() {
 	
-	struct wordlist *list = fget_str_ps("sidh.sub", "[");
+	struct wordlist *list = fget_str_ps("sidh.sub", " ");
 	printf("size:%d\n", list->len);
 	
 	for(int i = 0; i < list->len; i++)
