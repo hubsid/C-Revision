@@ -2,23 +2,36 @@
 #include<string.h>
 
 void main(){
-	FILE* file = fopen("sidh.txt", "a");
+	FILE* file = fopen("sidh.txt", "r");
+	if(!file) {
+		puts("the file pointer is null");
+		return;
+	}
+	char s[100];
 	
-	int prev_s[50];
-	strcpy(prev_s, "000");
-	char s[50];
-	strcpy(s, "000");
-	
-	gets(s);
-	puts("-");
-	puts(s);
-	puts("-");
-	return;
+	char* strs = malloc(1);
+	*strs = '\0';
+	char* cp = strs;
+	int len;
+	int size = 0;
+	while(fgets(s, 100, file) != NULL) {
+		len = strlen(s);
+		printf("len=%d, size=%d\n", len, size);
+		size += len;
+		strs = realloc(strs, size+1);
+		if(!strs) {
+			puts("not able to allocate memory, when trying to copy the string :");
+			puts(s);
+			break;
+		}
+		strcpy(cp, s);
+		printf("+len=%d, size=%d\n", len, size);
+		cp += len;
 		
-	do {
-		gets(s);
-		
-	}while(1);
+		printf("allocation size:%d bytes\n", size);
+	}
+	puts("the file is :");
+	puts(strs);
 	fclose(file);
 }
 
