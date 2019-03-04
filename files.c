@@ -44,9 +44,9 @@ struct wordlist* fget_str_ps(char* file_name, char* delim) {
 	
 	char buf_str[BLOCK_N];
 	char *overflow = NULL;
+	int of_len = 0;
 	char ** cp = malloc(sizeof(char*));
 	int n = 0;
-	int str_len;
 	
 	while(fgets(buf_str, BLOCK_N, file)) {
 		puts("block");
@@ -57,13 +57,36 @@ struct wordlist* fget_str_ps(char* file_name, char* delim) {
 					if(*p1 == *p) {
 						int len = p - prev_p;
 						if(len > 0) {
-							char* temp_str = malloc(len + 1);
+							char* temp_str = malloc(len);
+							strncpy(temp_str, prev_p, len);
+							char* overflow1 = realloc(overflow, len + of_len + 1);
+							if(!overflow1) {
+								puts("overflow1's realloc failed...'");
+								exit(0);
+							}
+							overflow = overflow1;
+							strncpy(overflow + of_len, temp_str, len);
+							overflow[of_len + len] = '\0';
+							free(temp_str);
+							
+							char* tmp = overflow;
+							overflow = NULL;
+							char** cp_tmp = realloc(cp, ++n * sizeof(char*));
+							if(!cp_tmp) {
+								puts("cp's 'realloc failed...");
+								exit(0);
+							}
+							cp = cp_tmp;
+							cp[n-1] = tmp;
+							prev_p = p+1;
+							goto exit_lbl;							
 						}
 						
 					}
 				}
 			}
 		}
+		exit_lbl:
 		for(; *p != '\0'; p++) {
 			for(char *p1 = delim; *p1 != '\0'; p1++) {
 				if(*p1 == *p) {
@@ -90,9 +113,9 @@ struct wordlist* fget_str_ps(char* file_name, char* delim) {
 			}	
 		}
 		if(prev_p != p) {
-			int len = p - prev_p;
-			overflow = malloc(len);
-			strncpy(overflow, prev_p, len);
+			of_len = p - prev_p;
+			overflow = malloc(of_len);
+			strncpy(overflow, prev_p, of_len);
 		}
 	}
 	
@@ -104,7 +127,7 @@ struct wordlist* fget_str_ps(char* file_name, char* delim) {
 
 int main() {
 	
-	struct wordlist *list = fget_str_ps("sidh.sub", "|");
+	struct wordlist *list = fget_str_ps("sidh.sub", "[");
 	printf("size:%d\n", list->len);
 	
 	for(int i = 0; i < list->len; i++)
