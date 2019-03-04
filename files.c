@@ -104,7 +104,7 @@ struct wordlist* fget_str_ps(char* file_name, char* delim) {
 
 int main() {
 	
-	struct wordlist *list = fget_str_ps("inputfile.txt", " ");
+	struct wordlist *list = fget_str_ps("sidh.sub", "|");
 	printf("size:%d\n", list->len);
 	
 	for(int i = 0; i < list->len; i++)
