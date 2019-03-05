@@ -35,7 +35,7 @@ char* fget_str(char* file_name){
 	return cp;
 }
 
-struct wordlist* fget_str_ps(char* file_name, char* delim) {
+struct wordlist* fget_words(char* file_name, char* delim) {
 	FILE* file = fopen(file_name, "r");
 	if(!file) {
 		printf("file cannot be opened.");
@@ -140,7 +140,7 @@ struct wordlist* fget_str_ps(char* file_name, char* delim) {
 
 int main() {
 	
-	struct wordlist *list = fget_str_ps("sidh.sub", "\n ");
+	struct wordlist *list = fget_words("sidh.sub", "\n ");
 	printf("size:%d\n", list->len);
 	
 	for(int i = 0; i < list->len; i++)
