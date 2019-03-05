@@ -119,7 +119,8 @@ struct wordlist* fget_str_ps(char* file_name, char* delim) {
 				overflow = realloc(overflow, of_len + len);
 			else
 				overflow = malloc(len);
-			strncpy(overflow + of_len, prev_p, len);			
+			strncpy(overflow + of_len, prev_p, len);
+			of_len += len;			
 		}
 	}
 	printf("offset length=%dn\n", of_len);
@@ -139,7 +140,7 @@ struct wordlist* fget_str_ps(char* file_name, char* delim) {
 
 int main() {
 	
-	struct wordlist *list = fget_str_ps("sidh.sub", " ");
+	struct wordlist *list = fget_str_ps("sidh.sub", "\n ");
 	printf("size:%d\n", list->len);
 	
 	for(int i = 0; i < list->len; i++)
