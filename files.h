@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<string.h>
+#include "stringutil.h"
 
 #define BLOCK_N 20
 
@@ -8,7 +9,7 @@ struct wordlist {
 	int len;
 };
 
-char* fget_str(char* file_name){
+String fget_str(char* file_name){
 	FILE* file = fopen(file_name, "r");
 	if(!file) {
 		printf("file cannot be opened.");
@@ -32,7 +33,7 @@ char* fget_str(char* file_name){
 		n += len;
 	}
 	fclose(file);
-	return cp;
+	return (String) {cp, n};
 }
 
 struct wordlist* fget_words(char* file_name, char* delim) {
@@ -136,15 +137,4 @@ struct wordlist* fget_words(char* file_name, char* delim) {
 	list->first = cp;
 	list->len = n;
 	return list;
-}
-
-int main() {
-	
-	struct wordlist *list = fget_words("sidh.sub", "\n ");
-	printf("size:%d\n", list->len);
-	
-	for(int i = 0; i < list->len; i++)
-		printf("%d\t%s\n", strlen(list->first[i]), list->first[i]);
-	
-	return 0;
 }
