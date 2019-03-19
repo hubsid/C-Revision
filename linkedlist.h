@@ -45,6 +45,8 @@ Node search(int key) {
 	int i = 0;
 	while(p && p->key != key)
 		p = p-> next, i++;
+	if(!p)
+		return (Node){NULL, NULL, -1};
 	return (Node){p, p, i};
 }
 
@@ -69,14 +71,51 @@ void print_f() {
 
 void print_r() {
 	puts("---");
-	for(Node *p = last; p; p = p->prev);
+	for(Node *p = last; p; p = p->prev)
 		printf("%d ", p->key);
 	putchar('\n');
 }
 
 int main() {
 
-
+	while(1) {
+		int op;
+		scanf("%d", &op);
+		int val;
+		if(op == 1) {
+			scanf("%d", &val);
+			append(val);
+			puts("appended");
+		}
+		else if(op == 2) {
+			scanf("%d", &val);
+			prepend(val);
+			puts("prepended");
+		}
+		else if(op == 3) {
+			scanf("%d", &val);
+			Node res = search(val);
+			printf("index:%d\n", res.key);
+		}
+		else if(op == 4) {
+			scanf("%d", &val);
+			Node res = search(val);
+			if(res.next) {
+				delete(res.next);
+				puts("deleted.");
+			}
+			else {
+				puts("node doesn't exist");
+			}
+		}
+		else if(op == 5) {
+			print_f();
+		}
+		else if(op == 6) {
+			print_r();
+		}
+		else
+			break;
+	}
 	return 0;
 }
->>>>>>> e2285b296bb060b8c62457d7af8c36a49fb249bc
