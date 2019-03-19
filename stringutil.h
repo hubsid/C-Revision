@@ -84,6 +84,6 @@ Search_res find(char* str, char* patt) {
 		else
 			i += j + 1;
 	}
-	patt_index = realloc(patt_index, match_len);
+	patt_index = (int*)realloc(patt_index, match_len * sizeof(int));
 	return (Search_res){patt_index, match_len};
 }

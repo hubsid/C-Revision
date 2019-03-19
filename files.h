@@ -13,13 +13,13 @@ String fget_str(char* file_name){
 	FILE* file = fopen(file_name, "r");
 	if(!file) {
 		printf("file cannot be opened.");
-		return NULL;
+		return null_str();
 	}
 	
 	char str[BLOCK_N];
 	int n = 1;
 	int len;
-	char *cp = malloc(1);
+	char *cp = (char*)malloc(1);
 	
 	while(fgets(str, BLOCK_N, file)) {
 		len = strlen(str);
@@ -46,7 +46,7 @@ struct wordlist* fget_words(char* file_name, char* delim) {
 	char buf_str[BLOCK_N];
 	char *overflow = NULL;
 	int of_len = 0;
-	char ** cp = malloc(sizeof(char*));
+	char ** cp = (char**)malloc(sizeof(char*));
 	int n = 0;
 	
 	while(fgets(buf_str, BLOCK_N, file)) {
@@ -58,9 +58,9 @@ struct wordlist* fget_words(char* file_name, char* delim) {
 					if(*p1 == *p) {
 						int len = p - prev_p;
 						if(len > 0) {
-							char* temp_str = malloc(len);
+							char* temp_str = (char*)malloc(len);
 							strncpy(temp_str, prev_p, len);
-							char* overflow1 = realloc(overflow, len + of_len + 1);
+							char* overflow1 = (char*)realloc(overflow, len + of_len + 1);
 							if(!overflow1) {
 								puts("overflow1's realloc failed...'");
 								exit(0);
@@ -73,7 +73,7 @@ struct wordlist* fget_words(char* file_name, char* delim) {
 							char* tmp = overflow;
 							overflow = NULL;
 							of_len = 0;
-							char** cp_tmp = realloc(cp, ++n * sizeof(char*));
+							char** cp_tmp = (char**)realloc(cp, ++n * sizeof(char*));
 							if(!cp_tmp) {
 								puts("cp's 'realloc failed...");
 								exit(0);
@@ -95,7 +95,7 @@ struct wordlist* fget_words(char* file_name, char* delim) {
 //					puts("match");
 					int len = p - prev_p;
 					if(len > 0) {
-						char* temp_str = malloc(len + 1);
+						char* temp_str = (char*)malloc(len + 1);
 //						printf("*prev_p=%c,*p=%c,temp_str before copy=%s\n", *p, *prev_p, temp_str);
 						strncpy(temp_str, prev_p, len);
 						temp_str[len] = '\0';
@@ -117,23 +117,23 @@ struct wordlist* fget_words(char* file_name, char* delim) {
 		if(prev_p != p) {
 			int len = p - prev_p;
 			if(overflow)
-				overflow = realloc(overflow, of_len + len);
+				overflow = (char*)realloc(overflow, of_len + len);
 			else
-				overflow = malloc(len);
+				overflow = (char*)malloc(len);
 			strncpy(overflow + of_len, prev_p, len);
 			of_len += len;			
 		}
 	}
 	printf("offset length=%dn\n", of_len);
 	if(overflow) {
-		overflow = realloc(overflow, of_len + 1);
+		overflow = (char*)realloc(overflow, of_len + 1);
 		overflow[of_len] = '\0';
-		cp = realloc(cp, ++n *sizeof(char*));
+		cp = (char**)realloc(cp, ++n *sizeof(char*));
 		
 		cp[n-1] = overflow;
 	}
 	
-	struct wordlist *list = malloc(sizeof(struct wordlist));
+	struct wordlist *list = (struct wordlist*)malloc(sizeof(struct wordlist));
 	list->first = cp;
 	list->len = n;
 	return list;
