@@ -2,6 +2,9 @@
 #include<string.h>
 #include "stringutil.h"
 
+#ifndef FILE_HEADER
+#define FILE_HEADER
+
 #define BLOCK_N 20
 
 struct wordlist {
@@ -13,7 +16,7 @@ String fget_str(char* file_name){
 	FILE* file = fopen(file_name, "r");
 	if(!file) {
 		printf("file cannot be opened.");
-		return NULL;
+		return null_str();
 	}
 	
 	char str[BLOCK_N];
@@ -138,3 +141,5 @@ struct wordlist* fget_words(char* file_name, char* delim) {
 	list->len = n;
 	return list;
 }
+
+#endif

@@ -2,6 +2,9 @@
 #include<stdlib.h>
 #include<string.h>
 
+#ifndef STRINGUTIL_HEADER
+#define STRINGUTIL_HEADER
+
 typedef struct {
 	char* str;
 	int n;
@@ -15,7 +18,7 @@ typedef struct {
 String null_str() {
 	String s;
 	s.n = 0;
-	s.str = (char*)malloc(1);
+	s.str = malloc(1);
 	s.str[0] = '\0';
 	return s;
 }
@@ -34,7 +37,7 @@ String substr(String str_in, int m, int n) {
 		return null_str();
 	}
 	int len = n - m;
-	char* str_out = (char*)malloc(len + 1);
+	char* str_out = malloc(len + 1);
 	str_out[len] = '\0';
 	strncpy(str_out, str_in.str + m, len);
 	
@@ -45,11 +48,19 @@ String substr(String str_in, int m, int n) {
 	return s;
 }
 
+char* substr1(char* s, char* t) {
+	int len = t - s;
+	char *str = malloc(len);
+	strncpy(str, s, len);
+
+	return str;
+}
+
 String insert(String source, int pos, String ins) {
 	pos = pos < 0 ? 0 : pos > source.n ? source.n : pos;
 	String result;
 	result.n = source.n + ins.n;
-	result.str = (char*)malloc(result.n + 1);
+	result.str = malloc(result.n + 1);
 	result.str[result.n] = '\0';
 	
 	String sub1 = substr(source, 0, pos);
@@ -65,25 +76,30 @@ String insert(String source, int pos, String ins) {
 	return result;
 }
 
-Search_res find(char* str, char* patt) {
-	int patt_len = strlen(patt);
-	int word_len = strlen(str) - patt_len + 1;
+Search_res find(String str, String patt) {
+	if(! (str.n > 0 && patt.n > 0 && str.n >= patt.n))
+		return (Search_res) {NULL, 0};
+	int word_len = str.n - patt.n + 1;
 	
-	char substr[patt_len + 1];
-	substr[patt_len] = '\0';
+	char substr[patt.n + 1];
+	substr[patt.n] = '\0';
 		
-	int *patt_index = (int*)malloc(word_len * sizeof(int));
+	int *patt_index = malloc(word_len * sizeof(int));
 	int match_len = 0;
 	for(int i = 0; i < word_len;) {
 		int j = 0;
-		while(j < patt_len && str[i + j] == patt[j]) j++;
-		if(j == patt_len) {
+		while(j < patt.n && str.str[i + j] == patt.str[j]) j++;
+		if(j == patt.n) {
 			patt_index[match_len++] = i;
-			i += patt_len;
+			i += patt.n;
 		}
-		else
-			i += j + 1;
+		else {
+			if(j) i += j;
+			else i++;
+		}
 	}
-	patt_index = realloc(patt_index, match_len);
+	patt_index = realloc(patt_index, match_len * sizeof(int));
 	return (Search_res){patt_index, match_len};
 }
+
+#endif
