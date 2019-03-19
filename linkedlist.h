@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+#ifndef LINKEDLIST_HEADER
+#define LINKEDLIST_HEADER
 typedef struct node {
 	struct node *prev;
 	struct node *next;
@@ -76,46 +77,4 @@ void print_r() {
 	putchar('\n');
 }
 
-int main() {
-
-	while(1) {
-		int op;
-		scanf("%d", &op);
-		int val;
-		if(op == 1) {
-			scanf("%d", &val);
-			append(val);
-			puts("appended");
-		}
-		else if(op == 2) {
-			scanf("%d", &val);
-			prepend(val);
-			puts("prepended");
-		}
-		else if(op == 3) {
-			scanf("%d", &val);
-			Node res = search(val);
-			printf("index:%d\n", res.key);
-		}
-		else if(op == 4) {
-			scanf("%d", &val);
-			Node res = search(val);
-			if(res.next) {
-				delete(res.next);
-				puts("deleted.");
-			}
-			else {
-				puts("node doesn't exist");
-			}
-		}
-		else if(op == 5) {
-			print_f();
-		}
-		else if(op == 6) {
-			print_r();
-		}
-		else
-			break;
-	}
-	return 0;
-}
+#endif
