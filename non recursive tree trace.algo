@@ -13,8 +13,11 @@ Print(root)
 			else
 				dir = up
 		else
-			node = stack.pop().right
-			dir = down
+			if stack NOT EMPTY
+				node = stack.pop().right
+				dir = down
+			else
+				BREAK
 
 
 
