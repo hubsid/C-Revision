@@ -1,0 +1,27 @@
+traverse(root)
+	Node node = root
+	Direction dir = left-down
+		WHILE TRUE
+			if(dir == left-down)
+				print node
+				if(node.left != NULL)
+					node = node.left
+				else
+					dir = right-down
+			else if(dir == right-down)
+				if(node.right != NULL)
+					node = node.right
+					dir = left-down
+				else
+					dir = right-up
+			else if(dir == right-up)
+				if(node == NULL)
+					exit
+				if(node.parent.left == node)
+					dir = left-up
+				else
+					node = node.parent
+			else
+				node = node.parent
+				dir = right-down
+
