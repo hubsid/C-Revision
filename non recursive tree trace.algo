@@ -1,0 +1,20 @@
+Print(root)
+	node = root
+	stack
+	dir = down
+
+	WHILE TRUE
+		if dir IS down
+			if node.right EXISTS
+				stack.push(node)
+			print node
+			if node.left EXISTS
+				node = node.left
+			else
+				dir = up
+		else
+			node = stack.pop().right
+			dir = down
+
+
+
