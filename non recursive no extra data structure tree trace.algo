@@ -24,4 +24,24 @@ traverse(root)
 			else
 				node = node.parent
 				dir = right-down
+//there is a bug in condition dir = right-up, take the fix from impelemented code
 
+//method 2
+
+traverse(node)
+	loop
+		node = goto left most child node
+
+		if node.right exists
+			node = node.right
+		else
+			//goto parent node which has right child from left leaning path
+			while node.parent exists
+				if node.parent.right != null && node.parent.right != node
+					node = node.parent
+					break
+				node = node.parent
+			if node is null
+				break
+			else
+				node = node.right
